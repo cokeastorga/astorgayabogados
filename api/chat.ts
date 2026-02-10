@@ -37,6 +37,6 @@ export default async function handler(req: any, res: any) {
 
   } catch (error) {
     console.error("API Chat Error:", error);
-    return res.status(500).json({ text: "Error procesando la solicitud." });
+    return res.status(500).json({ text: "Error al procesar la respuesta con el servicio de Inteligencia Artificial." });
   }
 }

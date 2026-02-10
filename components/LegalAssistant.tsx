@@ -50,7 +50,7 @@ const LegalAssistant: React.FC = () => {
         setFeedbackData({});
       } catch (e) {
         console.error("Error iniciando chat:", e);
-        toast.error("Error de conexión con el asistente.");
+        toast.error("Error de conexión al iniciar el asistente.");
       }
     }
   }, [isOpen]);
@@ -99,7 +99,7 @@ const LegalAssistant: React.FC = () => {
       toast.success(finalFeedback.contactRequested ? "Solicitud enviada al equipo legal." : "Conversación guardada.", { id: loadingToast });
     } catch (error) {
       console.error("Error al cerrar chat:", error);
-      toast.error("Error al procesar los datos.", { id: loadingToast });
+      toast.error("Error al procesar los datos de la sesión.", { id: loadingToast });
     } finally {
       setIsOpen(false);
       setStatus(LegalAssistantStatus.IDLE);
@@ -159,7 +159,7 @@ const LegalAssistant: React.FC = () => {
       setStatus(LegalAssistantStatus.SUCCESS);
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { role: 'model', text: 'Error de conexión. Intente nuevamente.', timestamp: Date.now() }]);
+      setMessages(prev => [...prev, { role: 'model', text: 'Error crítico al conectar con el asistente legal. Intente más tarde.', timestamp: Date.now() }]);
       setStatus(LegalAssistantStatus.ERROR);
     }
   };

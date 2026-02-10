@@ -43,7 +43,7 @@ export const startLegalChat = (context?: string): MockChatSession => {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          throw new Error('Error en el servicio de chat');
+          throw new Error('Error en el endpoint de chat');
         }
 
         const data = await response.json();
@@ -58,10 +58,10 @@ export const startLegalChat = (context?: string): MockChatSession => {
         console.error("Chat Service Error:", error);
         
         if (error.name === 'AbortError') {
-          return { text: "La conexión está tardando demasiado. Por favor verifique su internet e intente nuevamente." };
+          return { text: "La respuesta del asistente está tardando más de lo esperado. Por favor, verifique su conexión." };
         }
 
-        return { text: "Lo siento, hubo un error de conexión. Por favor intente nuevamente." };
+        return { text: "Error al conectar con el servidor de inteligencia artificial. Intente nuevamente." };
       }
     }
   };
@@ -87,7 +87,7 @@ export const generateLeadSummary = async (messages: ChatMessage[]): Promise<Lead
       clientName: "Error",
       contactInfo: "Manual",
       legalCategory: "Error",
-      caseSummary: "No se pudo generar el resumen automático.",
+      caseSummary: "No se pudo generar el resumen automático debido a un error en el servicio de IA.",
       urgencyLevel: "MEDIA",
       recommendedAction: "Revisión manual requerida"
     };
@@ -105,7 +105,7 @@ export const getLegalNews = async (): Promise<NewsResult> => {
   } catch (error) {
     console.error("News Service Error:", error);
     return {
-      text: "No se pudieron cargar las noticias en este momento.",
+      text: "No se pudieron cargar las noticias jurídicas desde el servidor.",
       sources: []
     };
   }

@@ -25,6 +25,6 @@ export default async function handler(req: any, res: any) {
     });
 
   } catch (error) {
-    return res.status(500).json({ text: "Servicio no disponible", sources: [] });
+    return res.status(500).json({ text: "Error al conectar con el servicio de búsqueda de noticias jurídicas.", sources: [] });
   }
 }
