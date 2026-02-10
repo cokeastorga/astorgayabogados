@@ -6,7 +6,7 @@ export default async function handler(req: any, res: any) {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       contents: "Busca 3 titulares breves del Poder Judicial de Chile (pjud.cl) de esta semana.",
       config: {
         tools: [{ googleSearch: {} }],
