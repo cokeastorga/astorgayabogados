@@ -4,24 +4,29 @@ import { FIRM_TAGLINE } from '../constants';
 const Hero: React.FC = () => {
   return (
     <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden bg-navy-950">
-      {/* Background Image with Overlay */}
+      {/* Background Video with Overlay */}
       <div className="absolute inset-0 z-0">
-        {/* 
-           Se busca '/hero.jpg' en la carpeta public.
-           Si no existe, carga una textura de respaldo oscura.
-        */}
-        <img 
-          src="/hero.jpg"
-          onError={(e) => {
-            // Fallback to a matching dark luxury texture if file not found
-            e.currentTarget.src = "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop";
-          }}
-          alt="Astorga y Asociados Brand" 
-          className="w-full h-full object-cover opacity-90"
-        />
-        {/* Dark gradient overlay to ensure text readability while letting the gold/leather texture shine */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/hero.jpg" // Imagen de carga/respaldo mientras carga el video o si falla
+          className="w-full h-full object-cover"
+        >
+          {/* Se busca 'hero-background.mp4' en la carpeta public */}
+          <source src="/hero-background.mp4" type="video/mp4" />
+          {/* Fallback visual si el navegador no soporta video */}
+          <img 
+            src="/hero.jpg"
+            alt="Astorga y Asociados Brand" 
+            className="w-full h-full object-cover opacity-90"
+          />
+        </video>
+
+        {/* Dark gradient overlay to ensure text readability while letting the video shine */}
         <div className="absolute inset-0 bg-gradient-to-b from-navy-900/90 via-navy-900/70 to-navy-900/90 mix-blend-multiply"></div>
-        {/* Additional radial gradient to highlight the center if it's a logo */}
+        {/* Additional radial gradient to highlight the center */}
         <div className="absolute inset-0 bg-navy-950/40"></div>
       </div>
 
