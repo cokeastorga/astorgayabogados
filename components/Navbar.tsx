@@ -40,10 +40,12 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-navy-900/95 backdrop-blur-md shadow-xl py-3' : 'bg-transparent py-6'}`}>
+    // CAMBIO: z-[100] para estar por encima del LegalAssistant (z-50) y otros elementos.
+    // LÓGICA: Si isOpen es true, forzamos bg-transparent para que el overlay maneje el fondo completo y no haya "doble fondo" o cortes.
+    <nav className={`fixed w-full z-[100] transition-all duration-300 ${isScrolled && !isOpen ? 'bg-navy-900/95 backdrop-blur-md shadow-xl py-3' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <div className="flex items-center cursor-pointer z-50 relative" onClick={() => scrollToSection('hero')}>
+          <div className="flex items-center cursor-pointer z-[101] relative" onClick={() => scrollToSection('hero')}>
             <Scale className={`h-8 w-8 mr-2 transition-colors ${isOpen ? 'text-gold-500' : 'text-gold-500'}`} />
             <span className={`font-serif text-xl font-bold tracking-wider transition-colors ${isOpen ? 'text-white' : 'text-white'}`}>
               {FIRM_NAME.toUpperCase()}
@@ -65,7 +67,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Toggle */}
-          <div className="md:hidden z-50 relative">
+          <div className="md:hidden z-[101] relative">
             <button 
               onClick={() => setIsOpen(!isOpen)} 
               className="text-white hover:text-gold-500 transition-colors p-2 focus:outline-none"
@@ -78,8 +80,9 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile Menu Overlay */}
+      {/* CAMBIO: z-[99] para estar justo debajo de los botones de la navbar (z-[101]) pero encima del contenido de la página */}
       <div 
-        className={`fixed inset-0 bg-navy-900 z-40 md:hidden transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
+        className={`fixed inset-0 bg-navy-900 z-[99] md:hidden transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
