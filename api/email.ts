@@ -3,7 +3,7 @@ export default async function handler(req: any, res: any) {
 
   const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
   if (!SENDGRID_API_KEY) {
-    return res.status(500).json({ success: false, error: "SendGrid not configured" });
+    return res.status(500).json({ success: false, error: "La configuración de SendGrid no está disponible." });
   }
 
   const { type, data } = req.body;
@@ -48,6 +48,6 @@ SATISFACCIÓN: ${satisfaction}
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    return res.status(500).json({ success: false });
+    return res.status(500).json({ success: false, error: "Error al enviar el correo a través del proveedor de mensajería." });
   }
 }

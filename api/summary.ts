@@ -39,6 +39,6 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json(jsonData);
 
   } catch (error) {
-    return res.status(500).json({ error: "Failed to generate summary" });
+    return res.status(500).json({ error: "No se pudo generar el resumen del caso mediante el servicio de IA." });
   }
 }
