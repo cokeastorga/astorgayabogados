@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any) {
     const transcript = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.text}`).join('\n');
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       contents: `
         Analiza la siguiente conversación legal y extrae los datos en JSON:
         ${transcript}

@@ -21,7 +21,7 @@ export default async function handler(req: any, res: any) {
 
     // Use ai.chats.create to start a chat session.
     const chat: Chat = ai.chats.create({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       config: {
         systemInstruction: systemPrompt,
       },
