@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, Bot, ChevronRight, FileText, ThumbsUp, ThumbsDown, CheckCircle, AlertCircle } from 'lucide-react';
-import { Chat } from "@google/genai";
-import { startLegalChat, generateLeadSummary } from '../services/geminiService';
+import { startLegalChat, generateLeadSummary, MockChatSession } from '../services/geminiService';
 import { saveChatToDatabase } from '../services/auditService';
 import { sendLeadSummaryEmail } from '../services/emailService';
 import { ChatMessage, LegalAssistantStatus, ChatOption, ChatSession, LeadSummary } from '../types';
@@ -30,7 +29,7 @@ const LegalAssistant: React.FC = () => {
   }>({});
   
   // Refs
-  const chatSessionRef = useRef<Chat | null>(null);
+  const chatSessionRef = useRef<MockChatSession | null>(null);
   const sessionIdRef = useRef<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInteractedRef = useRef(false);

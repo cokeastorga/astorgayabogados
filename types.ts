@@ -56,3 +56,13 @@ export interface ChatOption {
   label: string;
   prompt: string;
 }
+
+export interface NewsSource {
+  title: string;
+  uri: string;
+}
+
+export interface NewsResult {
+  text: string;
+  sources: NewsSource[];
+}

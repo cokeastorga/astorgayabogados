@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Newspaper, ExternalLink, Loader2, RefreshCw } from 'lucide-react';
-import { getLegalNews, NewsResult } from '../services/geminiService';
+import { getLegalNews } from '../services/geminiService';
+import { NewsResult } from '../types';
 
 const NewsFeed: React.FC = () => {
   const [news, setNews] = useState<NewsResult | null>(null);
