@@ -155,7 +155,8 @@ const LegalAssistant: React.FC = () => {
 
     try {
       const result = await chatSessionRef.current.sendMessage({ message: text });
-      setMessages(prev => [...prev, { role: 'model', text: result.text, timestamp: Date.now() }]);
+      const responseText = result.text || ""; // Fallback seguro para TypeScript
+      setMessages(prev => [...prev, { role: 'model', text: responseText, timestamp: Date.now() }]);
       setStatus(LegalAssistantStatus.SUCCESS);
     } catch (error) {
       console.error("Chat Error:", error);
