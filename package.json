@@ -1,0 +1,28 @@
+{
+  "name": "astorga-y-asociados",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@google/genai": "^1.40.0",
+    "firebase": "^10.8.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.344.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hot-toast": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.8",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4"
+  }
+}
