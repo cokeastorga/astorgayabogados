@@ -3,19 +3,16 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Carga las variables de entorno según el modo (development/production)
-  // El tercer argumento '' permite cargar todas las variables, no solo las que empiezan con VITE_
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react()],
+    // Exponemos variables que empiecen con REACT_APP_ (legacy) y VITE_ en import.meta.env
+    envPrefix: ['VITE_', 'REACT_APP_'],
     define: {
-      // Exponemos las variables de entorno de forma segura para que 'process.env.VARIABLE' funcione
+      // Mapeo manual para API_KEY usada por el SDK de Gemini
       'process.env.API_KEY': JSON.stringify(env.API_KEY),
-      'process.env.REACT_APP_FIREBASE_API_KEY': JSON.stringify(env.REACT_APP_FIREBASE_API_KEY),
-      'process.env.REACT_APP_SENDGRID_API_KEY': JSON.stringify(env.REACT_APP_SENDGRID_API_KEY),
-      // Definimos process.env vacío como fallback para otras librerías
-      'process.env': {}
+      // ELIMINADO: 'process.env': {} -> Esto rompía process.env.NODE_ENV en librerías
     },
     build: {
       outDir: 'dist',

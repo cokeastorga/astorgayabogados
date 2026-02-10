@@ -1,26 +1,35 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
-// ⚠️ REEMPLAZA ESTOS VALORES CON LOS DE TU CONSOLA DE FIREBASE
-// Ve a: https://console.firebase.google.com/ > Configuración del Proyecto > General > Tus apps
+// Configuración de Firebase
+// Usamos import.meta.env directamente con tipado seguro gracias a vite-env.d.ts
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "TU_API_KEY_AQUI",
-  authDomain: "astorga-y-asociados-app.firebaseapp.com",
-  projectId: "astorga-y-asociados-app",
-  storageBucket: "astorga-y-asociados-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+  apiKey: import.meta.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: import.meta.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.REACT_APP_FIREBASE_APP_ID
 };
 
-// Inicializar Firebase solo si no existe ya una instancia (prevención de errores en hot-reload)
 let app;
+let db: any; 
+
 try {
+  // Validar que al menos la API Key exista antes de intentar inicializar
+  if (!firebaseConfig.apiKey) {
+    throw new Error("Falta configuración de Firebase (API Key). Verifique su archivo .env");
+  }
+
   app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  console.log("🔥 Firebase inicializado correctamente");
 } catch (error: any) {
-  // Si la app ya está inicializada, ignoramos el error.
-  if (!/already exists/.test(error.message)) {
-    console.error('Firebase initialization error', error.stack);
+  // Ignoramos el error "already exists" que ocurre a veces en hot-reload
+  if (error.message && !/already exists/.test(error.message)) {
+    console.error('❌ Error inicializando Firebase:', error.message);
+    console.warn('La auditoría de chats funcionará en modo local (fallback).');
   }
 }
 
-export const db = getFirestore(app);
+export { db };
