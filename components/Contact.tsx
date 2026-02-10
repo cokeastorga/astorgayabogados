@@ -32,7 +32,7 @@ const Contact: React.FC = () => {
         maxZoom: 20
       }).addTo(map);
 
-      // Custom icon setup to ensure it works without build step asset imports
+      // Custom icon setup using CDN assets
       const icon = L.icon({
         iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',

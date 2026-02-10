@@ -40,50 +40,61 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    // CAMBIO: z-[100] para estar por encima del LegalAssistant (z-50) y otros elementos.
-    // LÓGICA: Si isOpen es true, forzamos bg-transparent para que el overlay maneje el fondo completo y no haya "doble fondo" o cortes.
-    <nav className={`fixed w-full z-[100] transition-all duration-300 ${isScrolled && !isOpen ? 'bg-navy-900/95 backdrop-blur-md shadow-xl py-3' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center cursor-pointer z-[101] relative" onClick={() => scrollToSection('hero')}>
-            <Scale className={`h-8 w-8 mr-2 transition-colors ${isOpen ? 'text-gold-500' : 'text-gold-500'}`} />
-            <span className={`font-serif text-xl font-bold tracking-wider transition-colors ${isOpen ? 'text-white' : 'text-white'}`}>
-              {FIRM_NAME.toUpperCase()}
-            </span>
-          </div>
-          
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
-            {menuItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => scrollToSection(item.id)}
-                className="text-gray-300 hover:text-gold-500 transition-colors font-medium text-sm uppercase tracking-wide relative group"
-              >
-                {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all group-hover:w-full"></span>
-              </button>
-            ))}
-          </div>
+    // ESTRUCTURA CORREGIDA:
+    // El contenedor principal 'nav' solo posiciona.
+    // Separamos la 'Barra Visible' (fondo, blur, logo) del 'Overlay del Menú'.
+    // Esto evita que el backdrop-filter de la barra recorte el menú en móviles al hacer scroll.
+    <nav className="fixed top-0 left-0 w-full z-[100]">
+      
+      {/* 1. BARRA DE NAVEGACIÓN VISIBLE */}
+      <div className={`relative z-[101] w-full transition-all duration-300 ${
+        isScrolled && !isOpen 
+          ? 'bg-navy-900/95 backdrop-blur-md shadow-xl py-3' 
+          : 'bg-transparent py-6'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex items-center cursor-pointer" onClick={() => scrollToSection('hero')}>
+              <Scale className="h-8 w-8 mr-2 text-gold-500" />
+              <span className="font-serif text-xl font-bold tracking-wider text-white">
+                {FIRM_NAME.toUpperCase()}
+              </span>
+            </div>
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-8">
+              {menuItems.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-gray-300 hover:text-gold-500 transition-colors font-medium text-sm uppercase tracking-wide relative group"
+                >
+                  {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all group-hover:w-full"></span>
+                </button>
+              ))}
+            </div>
 
-          {/* Mobile Toggle */}
-          <div className="md:hidden z-[101] relative">
-            <button 
-              onClick={() => setIsOpen(!isOpen)} 
-              className="text-white hover:text-gold-500 transition-colors p-2 focus:outline-none"
-              aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+            {/* Mobile Toggle Button */}
+            <div className="md:hidden">
+              <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className="text-white hover:text-gold-500 transition-colors p-2 focus:outline-none"
+                aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+              >
+                {isOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {/* CAMBIO: z-[99] para estar justo debajo de los botones de la navbar (z-[101]) pero encima del contenido de la página */}
+      {/* 2. OVERLAY MENÚ MÓVIL */}
+      {/* Es un hermano de la barra, no un hijo. Esto asegura que cubra toda la pantalla sin recortes. */}
       <div 
-        className={`fixed inset-0 bg-navy-900 z-[99] md:hidden transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-0 bg-navy-900 z-[100] md:hidden transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${
+          isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'
         }`}
       >
         <div className="flex flex-col h-full justify-center px-8 space-y-8 relative overflow-hidden">
