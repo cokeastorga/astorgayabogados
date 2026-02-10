@@ -1,12 +1,12 @@
-export default async function handler(request: Request) {
-  if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
   if (!SENDGRID_API_KEY) {
-    return new Response(JSON.stringify({ success: false, error: "SendGrid not configured" }), { status: 500 });
+    return res.status(500).json({ success: false, error: "SendGrid not configured" });
   }
 
-  const { type, data } = await request.json();
+  const { type, data } = req.body;
   
   let subject = "";
   let contentValue = "";
@@ -46,8 +46,8 @@ SATISFACCIÓN: ${satisfaction}
 
     if (!response.ok) throw new Error("SendGrid Error");
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    return res.status(200).json({ success: true });
   } catch (error) {
-    return new Response(JSON.stringify({ success: false }), { status: 500 });
+    return res.status(500).json({ success: false });
   }
 }

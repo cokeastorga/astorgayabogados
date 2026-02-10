@@ -1,10 +1,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-export default async function handler(request: Request) {
-  if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   try {
-    const { messages } = await request.json();
+    const { messages } = req.body;
     
     // Initialize GoogleGenAI with the process.env.API_KEY directly.
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -33,12 +33,12 @@ export default async function handler(request: Request) {
       }
     });
 
-    return new Response(JSON.stringify(JSON.parse(response.text || "{}")), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const jsonText = response.text || "{}";
+    const jsonData = JSON.parse(jsonText);
+
+    return res.status(200).json(jsonData);
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to generate summary" }), { status: 500 });
+    return res.status(500).json({ error: "Failed to generate summary" });
   }
 }
