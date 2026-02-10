@@ -1,15 +1,30 @@
-
 import { GoogleGenAI, Chat, Type } from "@google/genai";
 import { ChatMessage, LeadSummary } from "../types";
 
 // Initialize Gemini API client
 // process.env.API_KEY is mapped specifically in vite.config.ts
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = process.env.API_KEY;
+let ai: GoogleGenAI | null = null;
+
+// Initialize lazily or conditionally to prevent crash if key is missing
+if (apiKey) {
+  try {
+    ai = new GoogleGenAI({ apiKey });
+  } catch (error) {
+    console.error("Failed to initialize GoogleGenAI:", error);
+  }
+} else {
+  console.warn("⚠️ API_KEY not found. Legal Assistant features will be disabled.");
+}
 
 /**
  * Inicia una sesión de chat con la personalidad de un abogado de admisión.
  */
 export const startLegalChat = (context?: string): Chat => {
+  if (!ai) {
+    throw new Error("La API Key de Gemini no está configurada. Contacte al administrador.");
+  }
+
   const systemPrompt = `
     Eres un abogado senior del equipo de admisión de "Astorga y Asociados".
     
@@ -56,6 +71,17 @@ export const generateLeadSummary = async (messages: ChatMessage[]): Promise<Lead
       caseSummary: "No hay suficiente información.",
       urgencyLevel: "BAJA",
       recommendedAction: "Revisar logs"
+    };
+  }
+
+  if (!ai) {
+    return {
+      clientName: "Error Config",
+      contactInfo: "Manual",
+      legalCategory: "Error",
+      caseSummary: "El asistente IA no está configurado correctamente (Falta API Key).",
+      urgencyLevel: "MEDIA",
+      recommendedAction: "Revisar configuración"
     };
   }
 
@@ -112,6 +138,13 @@ export interface NewsResult {
 }
 
 export const getLegalNews = async (): Promise<NewsResult> => {
+  if (!ai) {
+    return {
+      text: "Servicio de noticias no disponible (API Key no configurada).",
+      sources: []
+    };
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',

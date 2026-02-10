@@ -11,8 +11,8 @@ export default defineConfig(({ mode }) => {
     envPrefix: ['VITE_', 'REACT_APP_'],
     define: {
       // Mapeo manual para API_KEY usada por el SDK de Gemini
-      'process.env.API_KEY': JSON.stringify(env.API_KEY),
-      // ELIMINADO: 'process.env': {} -> Esto rompía process.env.NODE_ENV en librerías
+      // Usamos || '' para asegurar que no sea undefined si falta la variable
+      'process.env.API_KEY': JSON.stringify(env.API_KEY || ''),
     },
     build: {
       outDir: 'dist',
