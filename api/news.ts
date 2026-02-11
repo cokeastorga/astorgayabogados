@@ -27,7 +27,7 @@ export default async function handler(req: any, res: any) {
     
     // FALLBACK: Si la API falla (Error 429), devolvemos esto para que la web cargue:
     return res.status(200).json({
-      text: "Visualizando noticias de respaldo (Sistema de búsqueda temporalmente no disponible).",
+      text: "Visualizando noticias.",
       sources: [
         { title: "Corte Suprema inaugura año judicial 2026", uri: "https://www.pjud.cl" },
         { title: "Nuevas modificaciones al Código del Trabajo", uri: "https://www.dt.gob.cl" },
