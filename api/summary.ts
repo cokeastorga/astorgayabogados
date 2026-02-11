@@ -1,22 +1,32 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
-  try {
-    const { messages } = req.body;
+  const { messages } = req.body;
+  const transcript = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.text}`).join('\n');
+  const promptText = `
+    Analiza la siguiente conversación legal y extrae los datos en JSON estrictamente con esta estructura:
+    {
+      "clientName": "string",
+      "contactInfo": "string",
+      "legalCategory": "string",
+      "caseSummary": "string",
+      "urgencyLevel": "BAJA" | "MEDIA" | "ALTA" | "CRÍTICA",
+      "recommendedAction": "string"
+    }
     
-    // Initialize GoogleGenAI with the process.env.API_KEY directly.
+    CONVERSACIÓN:
+    ${transcript}
+  `;
+
+  // 1. INTENTO CON GEMINI
+  try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const transcript = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.text}`).join('\n');
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: `
-        Analiza la siguiente conversación legal y extrae los datos en JSON:
-        ${transcript}
-      `,
+      model: 'gemini-3-flash-preview',
+      contents: promptText,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -35,11 +45,49 @@ export default async function handler(req: any, res: any) {
     });
 
     const jsonText = response.text || "{}";
-    const jsonData = JSON.parse(jsonText);
+    return res.status(200).json(JSON.parse(jsonText));
 
-    return res.status(200).json(jsonData);
+  } catch (geminiError: any) {
+    console.error("⚠️ Gemini Summary Error:", geminiError.message || geminiError);
 
-  } catch (error) {
-    return res.status(500).json({ error: "No se pudo generar el resumen del caso mediante el servicio de IA." });
+    // 2. INTENTO CON OPENAI
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        console.log("🔄 Switching to OpenAI Fallback for Summary...");
+
+        const openAiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            response_format: { type: "json_object" }, // Forzar JSON
+            messages: [
+              { role: "system", content: "Eres un asistente legal experto en extraer datos. Responde solo en JSON." },
+              { role: "user", content: promptText }
+            ]
+          })
+        });
+
+        if (!openAiResponse.ok) throw new Error("OpenAI request failed");
+
+        const data = await openAiResponse.json();
+        const content = data.choices[0]?.message?.content || "{}";
+        
+        return res.status(200).json(JSON.parse(content));
+
+      } catch (openAiError) {
+        console.error("❌ OpenAI Summary Fallback Failed:", openAiError);
+      }
+    }
+
+    // 3. FALLBACK MANUAL SI TODO FALLA
+    return res.status(500).json({ 
+      error: "No se pudo generar el resumen.",
+      clientName: "No detectado (Error Sistema)",
+      urgencyLevel: "ALTA"
+    });
   }
 }
