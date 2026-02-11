@@ -125,8 +125,8 @@ const Navbar: React.FC = () => {
             >
                <p className="text-gold-500 text-sm font-bold uppercase tracking-widest mb-3">Contacto Rápido</p>
                <div className="space-y-2">
-                 <a href="tel:+56223456789" className="block text-gray-300 hover:text-white text-lg font-light">+56 9 500 89 295</a>
-                 <a href="mailto:contacto@astorgayasociados.cl" className="block text-gray-300 hover:text-white text-lg font-light">contacto@astorgayasociados.cl</a>
+                 <a href="tel:+56950089295" className="block text-gray-300 hover:text-white text-lg font-light">+56 9 500 89 295</a>
+                 <a href="mailto:pab.astorga@astorgayasociados.cl" className="block text-gray-300 hover:text-white text-lg font-light">contacto@astorgayasociados.cl</a>
                </div>
             </div>
         </div>
