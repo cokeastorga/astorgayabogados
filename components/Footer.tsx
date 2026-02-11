@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         <div className="mt-8 text-center text-xs text-gray-600">
-           CC IT & Solutions
+           Abogados especialistas en Litigación.
         </div>
       </div>
     </footer>
