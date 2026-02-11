@@ -5,6 +5,8 @@ export default async function handler(req: any, res: any) {
 
   try {
     const { messages } = req.body;
+    
+    // Initialize GoogleGenAI with the process.env.API_KEY directly.
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const transcript = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.text}`).join('\n');
 
@@ -37,7 +39,6 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json(jsonData);
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Failed to generate summary" });
+    return res.status(500).json({ error: "No se pudo generar el resumen del caso mediante el servicio de IA." });
   }
 }
