@@ -56,7 +56,7 @@ const About: React.FC = () => {
              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gold-500"></div>
              {/* Imagen local desde la carpeta public */}
              <img 
-               src="/about.jpg" 
+               src="/fondo.jpg" 
                alt="Reunión estratégica" 
                className="rounded-sm shadow-2xl filter grayscale hover:grayscale-0 transition-all duration-500"
              />
