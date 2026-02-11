@@ -16,7 +16,7 @@ const About: React.FC = () => {
           <div>
             <h2 className="text-gold-500 font-bold tracking-widest uppercase text-sm mb-2">Sobre La Firma</h2>
             <h3 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
-              Excelencia Académica y Litigación
+              Excelencia Académica y Defensoria Legal
             </h3>
             
             {/* Destacado Magister */}
@@ -28,13 +28,13 @@ const About: React.FC = () => {
                 <h4 className="text-xl font-serif font-bold text-white">Magíster en Derecho Penal</h4>
                 <p className="text-gold-400 font-medium text-lg">Universidad de Chile</p>
                 <p className="text-gray-400 text-sm mt-2">
-                  Especialización de alto nivel en dogmática penal, criminología y litigación estratégica en la universidad más prestigiosa del país.
+                  Especialización de alto nivel en dogmática penal, criminología y Defensa estratégica en la universidad más prestigiosa del país.
                 </p>
               </div>
             </div>
 
             <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-              En <span className="text-white font-semibold">Astorga y Asociados</span>, combinamos la profundidad teórica con la agresividad práctica. Entendemos que la litigación no es solo un proceso legal, es una batalla técnica por los intereses de nuestros clientes.
+              En <span className="text-white font-semibold">Astorga y Asociados</span>, combinamos la profundidad teórica con la agresividad práctica. Entendemos que la Defensa no es solo un proceso legal, es una batalla técnica por los intereses de nuestros clientes.
             </p>
             <p className="text-gray-400 mb-8 leading-relaxed">
               Nuestro equipo multidisciplinario combina experiencia en litigios penales complejos, disputas civiles de alta cuantía y protección de derechos fundamentales.
@@ -56,7 +56,7 @@ const About: React.FC = () => {
              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gold-500"></div>
              {/* Imagen local desde la carpeta public */}
              <img 
-               src="/about.jpg" 
+               src="/fondo.png" 
                alt="Reunión estratégica" 
                className="rounded-sm shadow-2xl filter grayscale hover:grayscale-0 transition-all duration-500"
              />

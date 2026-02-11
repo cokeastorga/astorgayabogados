@@ -19,8 +19,8 @@ const Contact: React.FC = () => {
   useEffect(() => {
     // Initialize Map
     // Coordinates for Av. Apoquindo 4500 approx: -33.4124, -70.5826
-    const lat = -33.41245;
-    const lng = -70.58266;
+    const lat = -37.0970437;
+    const lng = -72.5610032;
 
     if (!mapRef.current) {
       const map = L.map('map-container').setView([lat, lng], 15);
@@ -46,7 +46,7 @@ const Contact: React.FC = () => {
         .bindPopup(`
           <div style="font-family: serif; text-align: center;">
             <strong style="color: #0f172a; font-size: 14px;">Astorga y Asociados</strong><br/>
-            <span style="font-family: sans-serif; font-size: 12px; color: #666;">Av. Apoquindo 4500</span>
+            <span style="font-family: sans-serif; font-size: 12px; color: #666;">Av. Castellón 420, Yumbel</span>
           </div>
         `)
         .openPopup();
@@ -122,7 +122,7 @@ const Contact: React.FC = () => {
               Contacto Directo
             </h3>
             <p className="text-gray-600 mb-10 text-lg">
-              Su caso requiere atención inmediata y profesional. Contáctenos hoy para agendar una reunión preliminar y trazar la estrategia de defensa.
+              Si considera que su caso requiere atención inmediata y profesional. Contáctenos hoy para agendar una reunión preliminar y trazar la estrategia de defensa.
             </p>
 
             <div className="space-y-8 mb-10">
