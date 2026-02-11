@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Chat } from "@google/genai";
 
 export default async function handler(req: any, res: any) {
@@ -37,6 +38,8 @@ export default async function handler(req: any, res: any) {
 
   } catch (error) {
     console.error("API Chat Error:", error);
-    return res.status(500).json({ text: "Error al procesar la respuesta con el servicio de Inteligencia Artificial." });
+     return res.status(200).json({ 
+      text: "Lo siento, en este momento nuestros sistemas están experimentando una alta demanda. Por favor, contáctanos directamente a través del formulario o intenta nuevamente mañana." 
+    });
   }
 }
