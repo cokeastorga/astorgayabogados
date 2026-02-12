@@ -22,6 +22,7 @@ export enum LegalAssistantStatus {
   ERROR = 'ERROR',
   AWAITING_FEEDBACK = 'AWAITING_FEEDBACK', // Usuario respondiendo encuesta
   SUMMARIZING = 'SUMMARIZING', // Generando resumen final
+  FALLBACK_MODE = 'FALLBACK_MODE', // Modo manual cuando fallan las APIs
 }
 
 export interface ChatMessage {
@@ -55,6 +56,8 @@ export interface ChatOption {
   id: string;
   label: string;
   prompt: string;
+  action?: 'link' | 'flow'; // Para diferenciar acciones en modo fallback
+  value?: string; // URL o ID del siguiente paso del flujo
 }
 
 export interface NewsSource {

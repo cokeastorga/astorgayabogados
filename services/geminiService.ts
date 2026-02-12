@@ -4,7 +4,7 @@ import { ChatMessage, LeadSummary, NewsResult } from "../types";
 // Ya no importa GoogleGenAI directamente, protegiendo la API Key.
 
 export interface MockChatSession {
-  sendMessage: (params: { message: string }) => Promise<{ text: string }>;
+  sendMessage: (params: { message: string }) => Promise<{ text: string; isError?: boolean }>;
 }
 
 /**
@@ -48,21 +48,28 @@ export const startLegalChat = (context?: string): MockChatSession => {
 
         const data = await response.json();
         
+        // Detectar si el backend devolvió el mensaje de fallback de error (cuando fallan ambas APIs)
+        const isApiExhausted = data.text && data.text.includes("nuestros sistemas están experimentando una alta demanda");
+
         // Actualizamos el historial interno con el turno completado
         internalHistory.push({ role: 'user', parts: [{ text: message }] });
         internalHistory.push({ role: 'model', parts: [{ text: data.text }] });
 
-        return { text: data.text };
+        return { text: data.text, isError: isApiExhausted };
+
       } catch (error: any) {
         clearTimeout(timeoutId);
         console.error("Chat Service Error:", error);
         
         if (error.name === 'AbortError') {
-          return { text: "La respuesta del asistente está tardando más de lo esperado. Por favor, verifique su conexión." };
+          return { text: "La respuesta del asistente está tardando más de lo esperado.", isError: true };
         }
 
-        // Fallback elegante si el backend no está disponible
-        return { text: "Disculpe, en este momento no puedo conectar con el servidor central. Por favor contáctenos directamente al teléfono o email de la firma." };
+        // Si falla la conexión, devolvemos isError true para activar el modo fallback manual
+        return { 
+          text: "Error de conexión con el servidor inteligente.", 
+          isError: true 
+        };
       }
     }
   };
@@ -85,7 +92,7 @@ export const generateLeadSummary = async (messages: ChatMessage[]): Promise<Lead
   } catch (error) {
     console.error("Summary Service Error:", error);
     return {
-      clientName: "Cliente Web",
+      clientName: "Cliente Web (Fallback)",
       contactInfo: "No detectado",
       legalCategory: "Consulta General",
       caseSummary: "No se pudo generar el resumen automático debido a un error de conexión.",

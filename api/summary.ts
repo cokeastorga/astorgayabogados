@@ -1,9 +1,19 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
+// Helper para limpiar bloques de código Markdown (```json ... ```)
+const cleanJson = (text: string) => {
+  return text.replace(/```json/g, '').replace(/```/g, '').trim();
+};
+
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
   const { messages } = req.body;
+  
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: "Invalid messages format" });
+  }
+
   const transcript = messages.map((m: any) => `${m.role.toUpperCase()}: ${m.text}`).join('\n');
   const promptText = `
     Analiza la siguiente conversación legal y extrae los datos en JSON estrictamente con esta estructura:
@@ -44,7 +54,7 @@ export default async function handler(req: any, res: any) {
       }
     });
 
-    const jsonText = response.text || "{}";
+    const jsonText = cleanJson(response.text || "{}");
     return res.status(200).json(JSON.parse(jsonText));
 
   } catch (geminiError: any) {
@@ -87,7 +97,11 @@ export default async function handler(req: any, res: any) {
     return res.status(500).json({ 
       error: "No se pudo generar el resumen.",
       clientName: "No detectado (Error Sistema)",
-      urgencyLevel: "ALTA"
+      urgencyLevel: "ALTA",
+      contactInfo: "Revisar chat manual",
+      legalCategory: "Indeterminado",
+      caseSummary: "Error en el procesamiento del resumen.",
+      recommendedAction: "Revisión manual requerida"
     });
   }
 }

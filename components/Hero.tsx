@@ -15,7 +15,7 @@ const Hero: React.FC = () => {
           className="w-full h-full object-cover"
         >
           {/* Se busca 'hero-background.mp4' en la carpeta public */}
-          <source src="/fondo.mp4" type="video/mp4" />
+          <source src="/hero-background.mp4" type="video/mp4" />
           {/* Fallback visual si el navegador no soporta video */}
           <img 
             src="/hero.jpg"

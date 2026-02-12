@@ -15,45 +15,46 @@ const Contact: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Initialize Map
-    // Coordinates for Av. Apoquindo 4500 approx: -33.4124, -70.5826
+    // Coordinates for Yumbel approx
     const lat = -37.0970437;
     const lng = -72.5610032;
 
-    if (!mapRef.current) {
-      const map = L.map('map-container').setView([lat, lng], 15);
-      
-      // Use CartoDB Positron for a cleaner, more elegant look that fits the gold/navy theme
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
-      }).addTo(map);
+    // Prevent double initialization in Strict Mode
+    if (mapRef.current || !mapContainerRef.current) return;
 
-      // Custom icon setup using CDN assets
-      const icon = L.icon({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-      });
+    const map = L.map(mapContainerRef.current).setView([lat, lng], 15);
+    mapRef.current = map;
+    
+    // Use CartoDB Positron for a cleaner, more elegant look that fits the gold/navy theme
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(map);
 
-      L.marker([lat, lng], { icon: icon })
-        .addTo(map)
-        .bindPopup(`
-          <div style="font-family: serif; text-align: center;">
-            <strong style="color: #0f172a; font-size: 14px;">Astorga y Asociados</strong><br/>
-            <span style="font-family: sans-serif; font-size: 12px; color: #666;">Av. Castellón 420, Yumbel</span>
-          </div>
-        `)
-        .openPopup();
+    // Custom icon setup using CDN assets
+    const icon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
 
-      mapRef.current = map;
-    }
+    L.marker([lat, lng], { icon: icon })
+      .addTo(map)
+      .bindPopup(`
+        <div style="font-family: serif; text-align: center;">
+          <strong style="color: #0f172a; font-size: 14px;">Astorga y Asociados</strong><br/>
+          <span style="font-family: sans-serif; font-size: 12px; color: #666;">Av. Castellón 320, Yumbel</span>
+        </div>
+      `)
+      .openPopup();
 
+    // Cleanup function
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -73,19 +74,15 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Mostramos un toast de carga
     const loadingToast = toast.loading("Procesando solicitud...");
 
     try {
-      // 1. Intentar enviar vía Servicio (SendGrid / Backend)
       const sentViaApi = await sendContactEmail(formData);
 
       if (sentViaApi) {
         toast.success("Mensaje enviado correctamente. Le contactaremos a la brevedad.", { id: loadingToast });
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        // 2. FALLBACK
-        // Actualizamos el toast para informar al usuario
         toast.dismiss(loadingToast);
         toast("Abriendo su cliente de correo para completar el envío...", {
           icon: '📧',
@@ -97,7 +94,6 @@ const Contact: React.FC = () => {
           `Estimados Astorga y Asociados,\n\nSoy ${formData.name}.\nTeléfono: ${formData.phone}\nEmail: ${formData.email}\n\nDetalle del caso:\n${formData.message}`
         );
         
-        // Delay ligero para que el usuario lea el mensaje
         setTimeout(() => {
           window.location.href = `mailto:${CONTACT_INFO.email}?subject=${subject}&body=${body}`;
           setFormData({ name: '', email: '', phone: '', message: '' });
@@ -111,7 +107,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-slate-50">
+    <section id="contact" className="py-24 bg-slate-50 relative z-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           
@@ -176,13 +172,13 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Map Container */}
-            <div className="flex-grow min-h-[300px] w-full bg-slate-200 rounded-sm shadow-md border border-slate-300 relative z-0">
-               <div id="map-container" className="absolute inset-0 rounded-sm"></div>
+            <div className="flex-grow min-h-[300px] w-full bg-slate-200 rounded-sm shadow-md border border-slate-300 relative overflow-hidden">
+               <div ref={mapContainerRef} className="absolute inset-0 z-0 rounded-sm"></div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-white p-8 md:p-12 rounded-sm shadow-xl border-t-4 border-gold-500 h-fit">
+          <div className="bg-white p-8 md:p-12 rounded-sm shadow-xl border-t-4 border-gold-500 h-fit relative z-10">
             <h3 className="text-2xl font-serif font-bold text-navy-900 mb-6">Envíenos su Consulta</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
